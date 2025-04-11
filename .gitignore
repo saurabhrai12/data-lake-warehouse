@@ -24,4 +24,5 @@ crash.log
 snowflake_config.json
 *.pem
 *.key
+.env
 config/secrets/
