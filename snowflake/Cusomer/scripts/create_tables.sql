@@ -1,8 +1,7 @@
-
-
-CREATE TABLE IF NOT EXISTS products (
-    product_id INT PRIMARY KEY,
-    product_name STRING NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    category STRING
+CREATE TABLE IF NOT EXISTS customers (
+    customer_id INT PRIMARY KEY,
+    first_name STRING NOT NULL,
+    last_name STRING NOT NULL,
+    email STRING,
+    phone STRING
 );
