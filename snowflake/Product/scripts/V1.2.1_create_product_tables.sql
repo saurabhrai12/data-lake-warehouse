@@ -1,4 +1,4 @@
-
+USE schema my_product_schema;
 
 CREATE TABLE IF NOT EXISTS products (
     product_id INT PRIMARY KEY,
@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS product_orders (
     quantity INT CHECK (quantity > 0),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
+
 CREATE TABLE IF NOT EXISTS product_shipping (
     shipping_id INT PRIMARY KEY,
     order_id INT,
