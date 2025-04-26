@@ -1,56 +1,17 @@
 pipeline {
-    agent any
+    agent { 
+        docker { 
+            image "python:3.8"
+            args '--user 0:0'
+        } 
 
-    environment {
-        SNOWFLAKE_ACCOUNT = credentials('snowflake_account')
-        SNOWFLAKE_USER = credentials('snowflake_user')
-        SNOWFLAKE_PASSWORD = credentials('snowflake_password')
-        AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
     }
-
     stages {
-        stage('Checkout') {
+        stage('Run schemachange') {
             steps {
-                checkout scm
+                sh "pip install schemachange --upgrade"
+                sh "schemachange -f snowflake -a ${SF_ACCOUNT} -u ${SF_USERNAME} -r ${SF_ROLE} -w ${SF_WAREHOUSE} -d ${SF_DATABASE} -c ${SF_DATABASE}.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table"
             }
-        }
-
-        stage('Deploy Snowflake') {
-            steps {
-                script {
-                    sh 'chmod +x ci-cd/scripts/deploy-snowflake.sh'
-                    sh 'ci-cd/scripts/deploy-snowflake.sh'
-                }
-            }
-        }
-
-        stage('Deploy AWS') {
-            steps {
-                script {
-                    sh 'chmod +x ci-cd/scripts/deploy-aws.sh'
-                    sh 'ci-cd/scripts/deploy-aws.sh'
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                // Add testing steps here
-                echo 'Running tests...'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Deployment completed successfully!'
-        }
-        failure {
-            echo 'Deployment failed. Check the logs for details.'
-        }
-        always {
-            cleanWs()
         }
     }
 }

@@ -1,0 +1,1 @@
+CREATE SCHEMA IF NOT EXISTS my_customer_schema;
